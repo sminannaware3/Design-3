@@ -20,6 +20,30 @@
 #        Return None if this NestedInteger holds a single integer
 #        """
 
+# Time O(1)
+# Space O(h)
+class NestedIterator:
+    def __init__(self, nestedList: [NestedInteger]):
+        self.stack = [iter(nestedList)]
+        self.iterator = None 
+        self.nextVal = None
+
+    def next(self) -> int: # O(1)
+        return self.nextVal.getInteger() 
+    
+    def hasNext(self) -> bool: # Time O(h) max depth of nesting; amortized O(1)
+        while len(self.stack) > 0: # This while is important to build stack when there are nested lists, while only exists when it finds int value
+            try:
+                self.nextVal = next(self.stack[-1])
+                if self.nextVal.isInteger():
+                    return True
+                else:
+                    self.stack.append(iter(self.nextVal.getList()))
+            except StopIteration:
+                self.nextVal = None
+                self.stack.pop()
+        return False
+
 # Time O(n)
 # Space O(n)
 class NestedIterator:
